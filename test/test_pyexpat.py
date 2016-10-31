@@ -784,14 +784,18 @@ class ForeignDTDTests(unittest.TestCase):
 
 
 class MiscTests(unittest.TestCase):
+    def setUp(self):
+        self.minor = expat.version_info[1]
+        self.assertIn(self.minor, (1, 2))
+
     def test__version__(self):
         self.assertEqual(expat.__version__, sys.version.split()[0])
 
     def test_EXPAT_VERSION(self):
-        self.assertEqual(expat.EXPAT_VERSION, 'expat_2.2.0')
+        self.assertEqual(expat.EXPAT_VERSION, 'expat_2.%i.0' % self.minor)
 
     def test_version_info(self):
-        self.assertEqual(expat.version_info, (2, 2, 0))
+        self.assertEqual(expat.version_info, (2, self.minor, 0))
 
     def test_ErrorString(self):
         self.assertEqual(expat.ErrorString(1), 'out of memory')
