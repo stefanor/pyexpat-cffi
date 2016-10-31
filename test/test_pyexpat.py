@@ -127,6 +127,9 @@ class ParseTest(unittest.TestCase):
             self.out.append('External entity ref: %s' %(args[1:],))
             return 1
 
+        def ElementDeclHandler(self, name, model):
+            self.out.append('EL decl: %s: %r' % (name, model))
+
         def DefaultHandler(self, userData):
             pass
 
@@ -142,7 +145,8 @@ class ParseTest(unittest.TestCase):
         'EndCdataSectionHandler',
         'DefaultHandler', 'DefaultHandlerExpand',
         #'NotStandaloneHandler',
-        'ExternalEntityRefHandler'
+        'ExternalEntityRefHandler',
+        'ElementDeclHandler',
         ]
 
     def test_utf8(self):
@@ -158,21 +162,22 @@ class ParseTest(unittest.TestCase):
         op = out.out
         self.assertEqual(op[0], 'PI: \'xml-stylesheet\' \'href="stylesheet.css"\'')
         self.assertEqual(op[1], "Comment: ' comment data '")
-        self.assertEqual(op[2], "Notation declared: ('notation', None, 'notation.jpeg', None)")
-        self.assertEqual(op[3], "Unparsed entity decl: ('unparsed_entity', None, 'entity.file', None, 'notation')")
-        self.assertEqual(op[4], "Start element: 'root' {'attr1': 'value1', 'attr2': 'value2\\xe1\\xbd\\x80'}")
-        self.assertEqual(op[5], "NS decl: 'myns' 'http://www.python.org/namespace'")
-        self.assertEqual(op[6], "Start element: 'http://www.python.org/namespace!subelement' {}")
-        self.assertEqual(op[7], "Character data: 'Contents of subelements'")
-        self.assertEqual(op[8], "End element: 'http://www.python.org/namespace!subelement'")
-        self.assertEqual(op[9], "End of NS decl: 'myns'")
-        self.assertEqual(op[10], "Start element: 'sub2' {}")
-        self.assertEqual(op[11], 'Start of CDATA section')
-        self.assertEqual(op[12], "Character data: 'contents of CDATA section'")
-        self.assertEqual(op[13], 'End of CDATA section')
-        self.assertEqual(op[14], "End element: 'sub2'")
-        self.assertEqual(op[15], "External entity ref: (None, 'entity.file', None)")
-        self.assertEqual(op[16], "End element: 'root'")
+        self.assertEqual(op[2], "EL decl: root: (2, 0, None, ())"),
+        self.assertEqual(op[3], "Notation declared: ('notation', None, 'notation.jpeg', None)")
+        self.assertEqual(op[4], "Unparsed entity decl: ('unparsed_entity', None, 'entity.file', None, 'notation')")
+        self.assertEqual(op[5], "Start element: 'root' {'attr1': 'value1', 'attr2': 'value2\\xe1\\xbd\\x80'}")
+        self.assertEqual(op[6], "NS decl: 'myns' 'http://www.python.org/namespace'")
+        self.assertEqual(op[7], "Start element: 'http://www.python.org/namespace!subelement' {}")
+        self.assertEqual(op[8], "Character data: 'Contents of subelements'")
+        self.assertEqual(op[9], "End element: 'http://www.python.org/namespace!subelement'")
+        self.assertEqual(op[10], "End of NS decl: 'myns'")
+        self.assertEqual(op[11], "Start element: 'sub2' {}")
+        self.assertEqual(op[12], 'Start of CDATA section')
+        self.assertEqual(op[13], "Character data: 'contents of CDATA section'")
+        self.assertEqual(op[14], 'End of CDATA section')
+        self.assertEqual(op[15], "End element: 'sub2'")
+        self.assertEqual(op[16], "External entity ref: (None, 'entity.file', None)")
+        self.assertEqual(op[17], "End element: 'root'")
 
     def test_unicode(self):
         # Try the parse again, this time producing Unicode output
@@ -187,21 +192,22 @@ class ParseTest(unittest.TestCase):
         op = out.out
         self.assertEqual(op[0], 'PI: u\'xml-stylesheet\' u\'href="stylesheet.css"\'')
         self.assertEqual(op[1], "Comment: u' comment data '")
-        self.assertEqual(op[2], "Notation declared: (u'notation', None, u'notation.jpeg', None)")
-        self.assertEqual(op[3], "Unparsed entity decl: (u'unparsed_entity', None, u'entity.file', None, u'notation')")
-        self.assertEqual(op[4], "Start element: u'root' {u'attr1': u'value1', u'attr2': u'value2\\u1f40'}")
-        self.assertEqual(op[5], "NS decl: u'myns' u'http://www.python.org/namespace'")
-        self.assertEqual(op[6], "Start element: u'http://www.python.org/namespace!subelement' {}")
-        self.assertEqual(op[7], "Character data: u'Contents of subelements'")
-        self.assertEqual(op[8], "End element: u'http://www.python.org/namespace!subelement'")
-        self.assertEqual(op[9], "End of NS decl: u'myns'")
-        self.assertEqual(op[10], "Start element: u'sub2' {}")
-        self.assertEqual(op[11], 'Start of CDATA section')
-        self.assertEqual(op[12], "Character data: u'contents of CDATA section'")
-        self.assertEqual(op[13], 'End of CDATA section')
-        self.assertEqual(op[14], "End element: u'sub2'")
-        self.assertEqual(op[15], "External entity ref: (None, u'entity.file', None)")
-        self.assertEqual(op[16], "End element: u'root'")
+        self.assertEqual(op[2], "EL decl: root: (2, 0, None, ())"),
+        self.assertEqual(op[3], "Notation declared: (u'notation', None, u'notation.jpeg', None)")
+        self.assertEqual(op[4], "Unparsed entity decl: (u'unparsed_entity', None, u'entity.file', None, u'notation')")
+        self.assertEqual(op[5], "Start element: u'root' {u'attr1': u'value1', u'attr2': u'value2\\u1f40'}")
+        self.assertEqual(op[6], "NS decl: u'myns' u'http://www.python.org/namespace'")
+        self.assertEqual(op[7], "Start element: u'http://www.python.org/namespace!subelement' {}")
+        self.assertEqual(op[8], "Character data: u'Contents of subelements'")
+        self.assertEqual(op[9], "End element: u'http://www.python.org/namespace!subelement'")
+        self.assertEqual(op[10], "End of NS decl: u'myns'")
+        self.assertEqual(op[11], "Start element: u'sub2' {}")
+        self.assertEqual(op[12], 'Start of CDATA section')
+        self.assertEqual(op[13], "Character data: u'contents of CDATA section'")
+        self.assertEqual(op[14], 'End of CDATA section')
+        self.assertEqual(op[15], "End element: u'sub2'")
+        self.assertEqual(op[16], "External entity ref: (None, u'entity.file', None)")
+        self.assertEqual(op[17], "End element: u'root'")
 
     def test_parse_file(self):
         # Try parsing a file
@@ -217,21 +223,22 @@ class ParseTest(unittest.TestCase):
         op = out.out
         self.assertEqual(op[0], 'PI: u\'xml-stylesheet\' u\'href="stylesheet.css"\'')
         self.assertEqual(op[1], "Comment: u' comment data '")
-        self.assertEqual(op[2], "Notation declared: (u'notation', None, u'notation.jpeg', None)")
-        self.assertEqual(op[3], "Unparsed entity decl: (u'unparsed_entity', None, u'entity.file', None, u'notation')")
-        self.assertEqual(op[4], "Start element: u'root' {u'attr1': u'value1', u'attr2': u'value2\\u1f40'}")
-        self.assertEqual(op[5], "NS decl: u'myns' u'http://www.python.org/namespace'")
-        self.assertEqual(op[6], "Start element: u'http://www.python.org/namespace!subelement' {}")
-        self.assertEqual(op[7], "Character data: u'Contents of subelements'")
-        self.assertEqual(op[8], "End element: u'http://www.python.org/namespace!subelement'")
-        self.assertEqual(op[9], "End of NS decl: u'myns'")
-        self.assertEqual(op[10], "Start element: u'sub2' {}")
-        self.assertEqual(op[11], 'Start of CDATA section')
-        self.assertEqual(op[12], "Character data: u'contents of CDATA section'")
-        self.assertEqual(op[13], 'End of CDATA section')
-        self.assertEqual(op[14], "End element: u'sub2'")
-        self.assertEqual(op[15], "External entity ref: (None, u'entity.file', None)")
-        self.assertEqual(op[16], "End element: u'root'")
+        self.assertEqual(op[2], "EL decl: root: (2, 0, None, ())"),
+        self.assertEqual(op[3], "Notation declared: (u'notation', None, u'notation.jpeg', None)")
+        self.assertEqual(op[4], "Unparsed entity decl: (u'unparsed_entity', None, u'entity.file', None, u'notation')")
+        self.assertEqual(op[5], "Start element: u'root' {u'attr1': u'value1', u'attr2': u'value2\\u1f40'}")
+        self.assertEqual(op[6], "NS decl: u'myns' u'http://www.python.org/namespace'")
+        self.assertEqual(op[7], "Start element: u'http://www.python.org/namespace!subelement' {}")
+        self.assertEqual(op[8], "Character data: u'Contents of subelements'")
+        self.assertEqual(op[9], "End element: u'http://www.python.org/namespace!subelement'")
+        self.assertEqual(op[10], "End of NS decl: u'myns'")
+        self.assertEqual(op[11], "Start element: u'sub2' {}")
+        self.assertEqual(op[12], 'Start of CDATA section')
+        self.assertEqual(op[13], "Character data: u'contents of CDATA section'")
+        self.assertEqual(op[14], 'End of CDATA section')
+        self.assertEqual(op[15], "End element: u'sub2'")
+        self.assertEqual(op[16], "External entity ref: (None, u'entity.file', None)")
+        self.assertEqual(op[17], "End element: u'root'")
 
         # Issue 4877: expat.ParseFile causes segfault on a closed file.
         fp = open(test_support.TESTFN, 'wb')
@@ -451,6 +458,116 @@ class PositionTest(unittest.TestCase):
         self.parser.Parse(xml, 1)
 
 
+# Test Error* members:
+class ErrorPropertiesTest(unittest.TestCase):
+    def setUp(self):
+        self.parser = expat.ParserCreate()
+        xml = '\n<a><>\n'
+        try:
+            self.parser.Parse(xml, 1)
+        except expat.ExpatError:
+            pass
+
+    def test_ErrorLineNumber(self):
+        self.assertEqual(self.parser.ErrorLineNumber, 2)
+
+    def test_ErrorColumnNumber(self):
+        self.assertEqual(self.parser.ErrorColumnNumber, 4)
+
+    def test_ErrorByteIndex(self):
+        self.assertEqual(self.parser.ErrorByteIndex, 5)
+
+    def test_ErrorCode(self):
+        self.assertEqual(self.parser.ErrorCode, 4)
+
+
+class TestBase(unittest.TestCase):
+    def setUp(self):
+        self.parser = expat.ParserCreate()
+        self.parser.SetBase('https://example.com/')
+        self.parser.NotationDeclHandler = self.NotationDeclHandler
+
+    def NotationDeclHandler(self, name, base, sysid, pubid):
+        self.seen_base = base
+        self.seen_sysid = sysid
+
+    def test_base(self):
+        self.parser.Parse(data)
+        self.assertEqual(self.seen_base, 'https://example.com/')
+        self.assertEqual(self.seen_sysid, 'notation.jpeg')
+
+    def test_get_base(self):
+        self.assertEqual(self.parser.GetBase(), 'https://example.com/')
+
+
+class InputContextTest(unittest.TestCase):
+    def setUp(self):
+        self.parser = expat.ParserCreate()
+        self.parser.StartElementHandler = self.StartElementHandler
+        self.parser.EndElementHandler = self.EndElementHandler
+        self.seen = []
+
+    def StartElementHandler(self, name, attrs):
+        self.check_context('start')
+
+    def EndElementHandler(self, name):
+        self.check_context('end')
+
+    def check_context(self, event):
+        context = self.parser.GetInputContext()
+        self.seen.append((event, context))
+
+    def test_event_context(self):
+        xml = '<a>\n <b>\n  <c/>\n </b>\n</a>'
+        self.parser.Parse(xml, 1)
+        self.expected = [
+            ('start', '<a>\n <b>\n  <c/>\n </b>\n</a>'),
+            ('start', '<b>\n  <c/>\n </b>\n</a>'),
+            ('start', '<c/>\n </b>\n</a>'),
+            ('end', '\n </b>\n</a>'),
+            ('end', '</b>\n</a>'),
+            ('end', '</a>'),
+        ]
+        self.assertEqual(self.seen, self.expected)
+
+    def test_no_context(self):
+        self.assertIsNone(self.parser.GetInputContext())
+
+
+class ExternalEntityParserTest(unittest.TestCase):
+    def setUp(self):
+        self.parser = expat.ParserCreate()
+        self.parser.ExternalEntityRefHandler = self.ExternalEntityRefHandler
+        self.parser.CharacterDataHandler = self.CharacterDataHandler
+        self.data = []
+        self.retval = 1
+        self.document = (
+            '<!DOCTYPE test [<!ENTITY external SYSTEM "external.txt">]>\n'
+            '<root>Hi &external;!</root>'
+        )
+
+    def ExternalEntityRefHandler(self, context, base, sysId, pubId):
+        external = {
+            'external.txt': 'there',
+        }
+        parser = self.parser.ExternalEntityParserCreate(context)
+        parser.Parse(external[sysId])
+        return self.retval
+
+    def CharacterDataHandler(self, data):
+        self.data.append(data)
+
+    def test_success(self):
+        self.parser.Parse(self.document)
+        self.assertEqual(''.join(self.data), 'Hi there!')
+
+    def test_failure(self):
+        self.retval = 0
+        with self.assertRaises(expat.ExpatError) as cm:
+            self.parser.Parse(self.document)
+        self.assertEqual(cm.exception.code, 21)
+
+
 class sf1296433Test(unittest.TestCase):
     def test_parse_only_xml_data(self):
         # http://python.org/sf/1296433
@@ -666,6 +783,34 @@ class ForeignDTDTests(unittest.TestCase):
         self.assertEqual(handler_call_args, [("bar", "baz")])
 
 
+class MiscTests(unittest.TestCase):
+    def test__version__(self):
+        self.assertEqual(expat.__version__, sys.version.split()[0])
+
+    def test_EXPAT_VERSION(self):
+        self.assertEqual(expat.EXPAT_VERSION, 'expat_2.2.0')
+
+    def test_version_info(self):
+        self.assertEqual(expat.version_info, (2, 2, 0))
+
+    def test_ErrorString(self):
+        self.assertEqual(expat.ErrorString(1), 'out of memory')
+
+    def test_constants(self):
+        self.assertEqual(expat.XML_PARAM_ENTITY_PARSING_NEVER, 0)
+        self.assertEqual(expat.XML_PARAM_ENTITY_PARSING_UNLESS_STANDALONE, 1)
+        self.assertEqual(expat.XML_PARAM_ENTITY_PARSING_ALWAYS, 2)
+
+    def test_features(self):
+        self.assertEqual(expat.features, [
+            ('sizeof(XML_Char)', 1),
+            ('sizeof(XML_LChar)', 1),
+            ('XML_DTD', 0),
+            ('XML_CONTEXT_BYTES', 1024),
+            ('XML_NS', 0)
+        ])
+
+
 def test_main():
     run_unittest(SetAttributeTest,
                  ParseTest,
@@ -674,10 +819,15 @@ def test_main():
                  BufferTextTest,
                  HandlerExceptionTest,
                  PositionTest,
+                 ErrorPropertiesTest,
+                 TestBase,
+                 InputContextTest,
+                 ExternalEntityParserTest,
                  sf1296433Test,
                  ChardataBufferTest,
                  MalformedInputText,
-                 ForeignDTDTests)
+                 ForeignDTDTests,
+                 MiscTests)
 
 if __name__ == "__main__":
     test_main()
