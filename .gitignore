@@ -3,6 +3,7 @@
 /pyexpat/_expat.c
 /pyexpat/_expat.o
 /pyexpat/_expat.so
+/pyexpat/_expat.*.so
 
 # Editor gunk
 *~
