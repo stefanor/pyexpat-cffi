@@ -1,0 +1,15 @@
+*.pyc
+
+/_expat.c
+/_expat.o
+/_expat.so
+
+# Editor gunk
+*~
+.*.swp
+
+# Directories
+/.cache/
+/*.egg-info/
+/build/
+/dist/
