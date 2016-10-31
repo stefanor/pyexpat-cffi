@@ -1,8 +1,8 @@
 *.pyc
 
-/_expat.c
-/_expat.o
-/_expat.so
+/pyexpat/_expat.c
+/pyexpat/_expat.o
+/pyexpat/_expat.so
 
 # Editor gunk
 *~
